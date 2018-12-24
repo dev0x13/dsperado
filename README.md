@@ -22,3 +22,12 @@ You can also build static library:
 ```
 cmake -DSTATIC=ON ..
 ```
+
+## Features
+* Hilbert transform
+* Cross correlation:
+  * 2D complex normalized (different variants coming soon)
+* FIR:
+  * Low-pass
+  * High-pass
+  * Smoothed digital differentiator (other variants coming soon)
