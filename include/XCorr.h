@@ -3,7 +3,7 @@
 #include <complex>
 #include <vector>
 
-namespace desperado {
+namespace dsperado {
   namespace XCorr {
     /*
      * Normalized complex 2D cross correlation.

@@ -9,7 +9,7 @@ static constexpr double oneDivPi2 = 1.0 / M_PI_2;
 
 // Low pass filter
 
-void desperado::FIR::lowPass(double *inOut, size_t inOutSize, int cutoff, int sampleRate) {
+void dsperado::FIR::lowPass(double *inOut, size_t inOutSize, int cutoff, int sampleRate) {
   double RC = oneDivPi2 / cutoff;
   double dt = 1.0 / sampleRate;
   double alpha = dt / (RC + dt);
@@ -19,13 +19,13 @@ void desperado::FIR::lowPass(double *inOut, size_t inOutSize, int cutoff, int sa
   }
 }
 
-void desperado::FIR::lowPass(std::vector<double>& inOut, int cutoff, int sampleRate) {
+void dsperado::FIR::lowPass(std::vector<double>& inOut, int cutoff, int sampleRate) {
   lowPass(inOut.data(), inOut.size(), cutoff, sampleRate);
 }
 
 // High pass filter
 
-void desperado::FIR::highPass(double *inOut, size_t inOutSize, int cutoff, int sampleRate) {
+void dsperado::FIR::highPass(double *inOut, size_t inOutSize, int cutoff, int sampleRate) {
   double RC = oneDivPi2 / cutoff;
   double dt = 1.0 / sampleRate;
   double alpha = RC / (RC + dt);
@@ -39,13 +39,13 @@ void desperado::FIR::highPass(double *inOut, size_t inOutSize, int cutoff, int s
   }
 }
 
-void desperado::FIR::highPass(std::vector<double>& inOut, int cutoff, int sampleRate) {
+void dsperado::FIR::highPass(std::vector<double>& inOut, int cutoff, int sampleRate) {
   highPass(inOut.data(), inOut.size(), cutoff, sampleRate);
 }
 
 // Smoothed DD I
 
-void desperado::FIR::smoothedDD1(double *inOut, size_t inOutSize, size_t coeffsNum) {
+void dsperado::FIR::smoothedDD1(double *inOut, size_t inOutSize, size_t coeffsNum) {
   assert(coeffsNum >= 2);
 
   static std::map<int, std::vector<double>> coeffsMap;
@@ -65,6 +65,6 @@ void desperado::FIR::smoothedDD1(double *inOut, size_t inOutSize, size_t coeffsN
   }
 }
 
-void desperado::FIR::smoothedDD1(std::vector<double>& inOut, size_t coeffsNum) {
+void dsperado::FIR::smoothedDD1(std::vector<double>& inOut, size_t coeffsNum) {
   smoothedDD1(inOut.data(), inOut.size(), coeffsNum);
 }

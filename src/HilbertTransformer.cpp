@@ -1,6 +1,6 @@
 #include <HilbertTransformer.h>
 
-void desperado::HilbertTransformer::transform(const double* in, fftw_complex* out) {
+void dsperado::HilbertTransformer::transform(const double* in, fftw_complex* out) {
   for (int i = 0; i < this->bufferSize; ++i) {
     complexIn[i][0] = in[i];
     complexIn[i][1] = 0;
@@ -49,7 +49,7 @@ void desperado::HilbertTransformer::transform(const double* in, fftw_complex* ou
   }
 }
 
-void desperado::HilbertTransformer::transform(const std::vector<double>& in, std::vector<std::complex<double>>& out) {
+void dsperado::HilbertTransformer::transform(const std::vector<double>& in, std::vector<std::complex<double>>& out) {
   // Lazy allocation of output array
   if (!this->complexOutAllocated) {
     complexOut = (fftw_complex*) fftw_malloc(this->bufferSize * sizeof(fftw_complex));

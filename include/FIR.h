@@ -1,7 +1,7 @@
 #include <vector>
 #include <cstddef>
 
-namespace desperado {
+namespace dsperado {
   namespace FIR {
     /*
      * Low pass filter.

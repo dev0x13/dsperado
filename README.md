@@ -10,7 +10,7 @@ cd tools/
 ./build_fftw3.sh
 ```
 
-Build desperado with CMake:
+Build DSPerado with CMake:
 ```shell
 mkdir build
 cd build

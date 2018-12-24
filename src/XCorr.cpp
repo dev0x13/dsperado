@@ -1,7 +1,7 @@
 #include <XCorr.h>
 #include <cassert>
 
-std::complex<double> desperado::XCorr::XCorr2DNormComplex(
+std::complex<double> dsperado::XCorr::XCorr2DNormComplex(
         const std::vector<std::vector<std::complex<double>*>>& m1,
         const std::vector<std::vector<std::complex<double>*>>& m2,
         size_t col, size_t row, size_t lag) {

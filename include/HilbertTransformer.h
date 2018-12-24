@@ -6,7 +6,7 @@
 #include <complex>
 #include <cassert>
 
-namespace desperado {
+namespace dsperado {
   /*
    * Hilbert transformer class.
    * Intended to be used if multiple one-size transformations are needed.
