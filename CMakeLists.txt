@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(desperado)
+project(dsperado)
 
 option(USE_FFTW "Use FFTW (needed by HilbertTransformer)" ON)
 option(STATIC "Build static library" OFF)
@@ -26,9 +26,9 @@ endif()
 set(INCLUDE_DIR include/)
 
 if (STATIC MATCHES ON)
-    add_library(desperado STATIC ${SOURCE_FILES})
+    add_library(dsperado STATIC ${SOURCE_FILES})
 else()
-    add_library(desperado SHARED ${SOURCE_FILES})
+    add_library(dsperado SHARED ${SOURCE_FILES})
 endif()
 
 ### FFTW
@@ -50,10 +50,10 @@ if (USE_FFTW MATCHES ON)
             INTERFACE_INCLUDE_DIRECTORIES
             ${fftw3_headers})
 
-    target_link_libraries(desperado PUBLIC
+    target_link_libraries(dsperado PUBLIC
             fftw3
             )
 endif()
 
-target_include_directories(desperado PRIVATE
+target_include_directories(dsperado PRIVATE
         ${INCLUDE_DIR})
