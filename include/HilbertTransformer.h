@@ -67,11 +67,6 @@ namespace dsperado {
             }
 
             IFFT->transform(buffer, out);
-
-            for (ind = 0; ind < bufferSize; ++ind) {
-                out[ind].r /= bufferSize;
-                out[ind].i /= bufferSize;
-            }
         }
 
         /*
