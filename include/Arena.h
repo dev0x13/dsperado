@@ -5,7 +5,7 @@
 
 namespace dsperado {
     /*
-     * Helper memory arena class.
+     * Helper memory arena class. Not thread-safe.
      */
     template <typename T>
     class Arena {
@@ -23,14 +23,18 @@ namespace dsperado {
         }
 
         T* allocate(size_t length) {
-            auto newOffset = this->offset + length;
-            assert(newOffset <= this->size);
+          auto newOffset = this->offset + length;
+          assert(newOffset <= this->size);
 
-            auto p = this->arena + this->offset;
+          auto p = this->arena + this->offset;
 
-            offset += length;
+          offset += length;
 
-            return p;
+          return p;
+        }
+
+        void reset() {
+            offset = 0;
         }
     };
 }

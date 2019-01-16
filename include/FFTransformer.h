@@ -36,12 +36,12 @@ namespace dsperado {
          * These are the helper methods for compile time check if FFT is inversed
          */
         template <bool f>
-        inline float calcCoeff(typename std::enable_if<f, size_t>::type n) {
+        inline double calcCoeff(typename std::enable_if<f, size_t>::type n) {
             return -PI2 / n;
         }
 
         template <bool f>
-        inline float calcCoeff(typename std::enable_if<!f, size_t>::type n) {
+        inline double calcCoeff(typename std::enable_if<!f, size_t>::type n) {
             return PI2 / n;
         }
 
@@ -123,6 +123,7 @@ namespace dsperado {
          *   out - pointer to the output Complex<T> number array
          */
         void transform(const Type* in, Type* out) {
+            this->arena->reset();
             this->fft(in, out, this->size);
         }
 

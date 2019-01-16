@@ -1,41 +1,102 @@
 #pragma once
 
 #include <complex>
-#include <vector>
-#include <cassert>
 
 namespace dsperado {
     namespace XCorr {
         /*
-         * Normalized complex 2D cross correlation.
+         * Complex 2D cross correlation.
          * Params:
-         *   m1 - first 2D array [cols][rows]
-         *   m2 - second 2D array [cols][rows]
-         *   row - row index of interest
-         *   col - column index of interest
+         *   m1 - first 2D array [size1][size2]
+         *   m2 - second 2D array [size1][size2]
+         *   size1 - ...
+         *   size2 - ...
+         *   ind1 - ...
+         *   ind2 - ...
          *   lag - desired lag (delay)
          * Returns:
-         *   Complex cross correlation value in point (col, row)
+         *   Complex cross correlation value in point of interest (ind1, ind2)
          */
-        std::complex<double> XCorr2DNormComplex(
-                const std::vector<std::vector<std::complex<double> *>> &m1,
-                const std::vector<std::vector<std::complex<double> *>> &m2,
-                size_t col, size_t row, size_t lag) {
-            std::complex<double> corr1(0, 0), corr2(0, 0), corr3(0, 0);
+        template <typename T>
+        dsperado::Complex<T> XCorr2DComplex(
+                dsperado::Complex<T> **m1,
+                dsperado::Complex<T> **m2,
+                const size_t size1, const size_t size2,
+                const size_t ind1, const size_t ind2,
+                const int lag) {
 
-            auto N = m1.size();
+            dsperado::Complex<T> corr1;
 
-            assert(N != 0 && N == m2.size() && col < N);
+            corr1.r = 0;
+            corr1.i = 0;
 
-            auto M = m1[0].size();
+            size_t bound1, bound2;
 
-            assert(M == m2[0].size() && row < M);
+            if (lag > 0) {
+              bound1 = 0;
+              bound2 = lag;
+            }
+            else {
+              bound1 = abs(lag);
+              bound2 = 0;
+            }
 
-            for (size_t n_ = 0; n_ < N - col - lag; ++n_) {
-                for (size_t m_ = 0; m_ < M - row - lag; ++m_) {
-                    corr1 += *m1[col + n_][row + m_] * std::conj(*m2[col + n_][row + m_ + lag]);
-                    corr2 += *m1[col + n_][row + m_] * std::conj(*m1[col + n_][row + m_]);
-                    corr3 += *m2[col + n_][row + m_ + lag] * std::conj(*m2[col + n_][row + m_ + lag]);
+            dsperado::Complex<T> *tmp1, *tmp2;
+
+            for (size_t n_ = 0; n_ < size1 - ind1; ++n_) {
+              for (size_t m_ = bound1; m_ < size2 - ind2 - bound2; ++m_) {
+                tmp1 = &m1[ind1 + n_][ind2 + m_];
+                tmp2 = &m2[ind1 + n_][ind2 + m_ + lag];
+                corr1.r += tmp1->r * tmp2->r + tmp1->i * tmp2->i;
+                corr1.i += -tmp1->r * tmp2->i + tmp1->i * tmp2->r;
+              }
+            }
+
+            return corr1;
+        }
+
+        /*
+         * Normalized complex 2D cross correlation.
+         * Params:
+         *   m1 - first 2D array [size1][size2]
+         *   m2 - second 2D array [size1][size2]
+         *   size1 - ...
+         *   size2 - ...
+         *   ind1 - ...
+         *   ind2 - ...
+         *   lag - desired lag (delay)
+         * Returns:
+         *   Complex cross correlation value in point of interest (ind1, ind2)
+         */
+        template <typename T>
+        std::complex<T> XCorr2DNormComplex(
+                const std::complex<T> **m1,
+                const std::complex<T> **m2,
+                const size_t size1, const size_t size2,
+                const size_t ind1, const size_t ind2,
+                const int lag) {
+          
+            std::complex<T> corr1(0, 0), corr2(0, 0), corr3(0, 0);
+
+            size_t bound1, bound2;
+
+            if (lag > 0) {
+              bound1 = 0;
+              bound2 = lag;
+            } else {
+              bound1 = abs(lag);
+              bound2 = 0;
+            }
+
+            std::complex<T> *tmp1, *tmp2;
+
+            for (size_t n_ = 0; n_ < size1 - ind1; ++n_) {
+                for (size_t m_ = bound1; m_ < size2 - ind2 - bound2; ++m_) {
+                    tmp1 = &m1[ind1 + n_][ind2 + m_];
+                    tmp2 = &m2[ind1 + n_][ind2 + m_ + lag];
+                    corr1 += tmp1 * std::conj(tmp2);
+                    corr2 += tmp1 * std::conj(tmp1);
+                    corr3 += tmp2 * std::conj(tmp2);
                 }
             }
 
