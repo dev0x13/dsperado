@@ -5,6 +5,7 @@
 #include <cmath>
 #include <memory>
 #include <type_traits>
+#include <unordered_map>
 
 #include <Complex.h>
 #include <Arena.h>
@@ -25,10 +26,12 @@ namespace dsperado {
         size_t size;
         std::shared_ptr<dsperado::Arena<Type>> arena;
         size_t ind1, ind2;
-        Type w, wn, *tmp0, *tmp1, *tmp2, *tmp3;
+        Type w, *wn, *tmp0, *tmp1, *tmp2, *tmp3;
         T ang;
         T tmpReal0, tmpReal1;
         Type *complexIn;
+
+        std::unordered_map<size_t, Type> coeffs;
 
         bool complexInAllocated = false;
 
@@ -72,13 +75,10 @@ namespace dsperado {
             fft(s0, s0, n_d2);
             fft(s1, s1, n_d2);
 
-            ang = calcCoeff<forward>(n);
-
             w.r = 1;
             w.i = 0;
 
-            wn.r = cos(ang);
-            wn.i = sin(ang);
+            wn = &coeffs[n];
 
             for (ind1 = 0; ind1 < n_d2; ++ind1) {
                 tmp0 = &s0[ind1];
@@ -99,8 +99,8 @@ namespace dsperado {
                 divBy2<forward>(tmp3);
 
                 tmpReal0 = w.r;
-                w.r = w.r * wn.r - w.i * wn.i;
-                w.i = tmpReal0 * wn.i + w.i * wn.r;
+                w.r = w.r * wn->r - w.i * wn->i;
+                w.i = tmpReal0 * wn->i + w.i * wn->r;
             }
         }
 
@@ -113,7 +113,21 @@ namespace dsperado {
         FFTransformer(size_t size_) : size(size_) {
             assert((size_ & (size_ - 1)) == 0);
 
-            this->arena = std::make_shared<dsperado::Arena<Type>>(size_ * (size_t) log2(size_));
+            auto sizeLog = (size_t) log2(size_);
+
+            this->arena = std::make_shared<dsperado::Arena<Type>>(size_ * sizeLog);
+
+            coeffs.reserve(sizeLog);
+
+            Type wn;
+
+            for (size_t i = 1; i <= sizeLog; ++i) {
+              auto n = pow(2, i);
+              auto angle = calcCoeff<forward>(n);
+              wn.r = cos(angle);
+              wn.i = sin(angle);
+              coeffs[n] = wn;
+            }
         }
 
         /*
